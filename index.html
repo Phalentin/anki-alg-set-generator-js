@@ -15,6 +15,9 @@
                 background-color: black;
                 color: white;
             }
+            .link{
+                color: lightgray;
+            }
         }
         body{
             padding: .5%;
@@ -24,6 +27,10 @@
             font-family: serif;
             font-size: 1em;
         }
+        .link{
+            text-decoration: none; 
+            color: darkgray;
+        }
     </style>
 </head>
 <body>
@@ -32,18 +39,18 @@
         <label for="name-input">Input the name of your alg set:</label><br>
         <input type="text" name="name-input" id="name-input" placeholder="Input name here" class="input"><br>
         <label for="alg-input">Input your algorithms here one alg per line:</label><br>
-        <textarea name="alg-input" id="alg-input" style="width: 30%; height: 50%;" rows="20" placeholder="Input algs here" class="input"></textarea><br>
+        <textarea name="alg-input" id="alg-input" style="width: 30%; height: 50%;" rows="20" placeholder="Syntax:&#10;# Group&#10;Algorithm Name: R U R' U' *Note&#10;## Subgroup&#10;R U2 R' U2" class="input"></textarea><br>
         <label for="pre-rotation">Rotations before applying the scramble:</label><br>
         <input type="text" name="pre-rotation" id="pre-rotation" placeholder="Input rotations here" class="input"><br>
         <label for="image-type">Display image of the case:</label><br>
         <select name="image-type" id="image-type" class="input">
             <option value="no">No image</option>
             <option value="u" selected="selected">U-Layer</option>
-            <option value="UFR">UFR Sides</option>
-            <option value="ULF">ULF Sides</option>
+            <option value="RUF">RUF Sides</option>
+            <option value="LFU">LFU Sides</option>
         </select><br><br>
         <input type="button" id="generate-button" value="Generate"><br><br>
-        Created with ♡ by <a href="https://www.youtube.com/@justenoughalgorithms" style="text-decoration: none; color: lightgray;">Just Enough Algorithms</a>
+        Created with ♡ by <a href="https://www.youtube.com/@justenoughalgorithms" class="link">Just Enough Algorithms</a>
     </form>
 </body>
 </html>
