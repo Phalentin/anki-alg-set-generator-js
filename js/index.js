@@ -98,6 +98,11 @@ function textInterpreter(textLines) {
         alg = line.trim();
       }
       const algName = "#" + algNumber;
+      let ankifiedTags = ""
+      for(tag of tags) {
+        cleanTag = tag.replace(/ /g, "_");
+        ankifiedTags += (" " + cleanTag);
+      }
       const algObject = new AlgCard(algName, alg, note, [...tags]);
       algs.push(algObject)
     }
@@ -124,25 +129,27 @@ function calculateScrambles(algs) {
 
 function generatePackage(algs, deckName, imageType, preRotations) {
   let deck = new Deck(+new Date, deckName);
-  if(imageType = "none") {
+  console.log(imageType);
+  if(imageType == "none") {
     for(let alg of algs) {
-      deck.addNote(noneModel.note(alg.name, alg.alg, alg.note, alg.scramble, preRotations));
+      deck.addNote(noneModel.note([alg.name, alg.alg, alg.note, alg.scramble, preRotations], alg.tags));
     }
-  } else if(imageType = "u") {
+  } else if(imageType == "u") {
     for(let alg of algs) {
-      console.log(alg)
-      deck.addNote(noneModel.note(alg.name, alg.alg, alg.note, alg.scramble, preRotations));
+      deck.addNote(llModel.note([alg.name, alg.alg, alg.note, alg.scramble, preRotations], alg.tags));
     }
-  } else if(imageType = "RUF") {
+  } else if(imageType == "RUF") {
     for(let alg of algs) {
-      deck.addNote(noneModel.note(alg.name, alg.alg, alg.note, alg.scramble, preRotations));
+      deck.addNote(rufModel.note([alg.name, alg.alg, alg.note, alg.scramble, preRotations], alg.tags));
     }
-  } else if(imageType = "LFU") {
+  } else if(imageType == "LFU") {
     for(let alg of algs) {
-      deck.addNote(noneModel.note(alg.name, alg.alg, alg.note, alg.scramble, preRotations));
+      deck.addNote(lfuModel.note([alg.name, alg.alg, alg.note, alg.scramble, preRotations], alg.tags));
     }
   }
-  return deck;
+  const ankiPackage = new Package();
+  ankiPackage.addDeck(deck);
+  return ankiPackage;
 }
 function formSubmit() {
   console.log('Form submitted')
@@ -156,9 +163,9 @@ function formSubmit() {
 
   const algCards = calculateScrambles(algs);
   
-  const ankiPackage = generatePackage(algCards, name, "u", preRotations);
+  const ankiPackage = generatePackage(algCards, name, imageType, preRotations);
 
-  const fileName = name.replace(/ /g, "_").toLowerCase();
+  const fileName = name.replace(/ /g, "_").toLowerCase() + ".apkg";
 
   ankiPackage.writeToFile(fileName);
 }
