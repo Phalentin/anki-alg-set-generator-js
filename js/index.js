@@ -176,7 +176,7 @@ function textInterpreter(textLines) {
      */
     function calculateScramble(alg, cube) {
       cube.identity()
-
+      
       cube.move(alg);
       const scramble = cube.solve();
 
@@ -203,7 +203,14 @@ function textInterpreter(textLines) {
       alg = alg.substring(0, asteriskIndex).trim();
     }
     
-    const scramble = calculateScramble(alg, cube);
+    let scramble = ""
+    try {
+      scramble = calculateScramble(alg, cube);
+
+    } catch(error) {
+      alert('Invalid syntax in the algorithm field!');
+      throw new Error('Invalid syntax in algorithm field')
+    }
 
     const algCard = new AlgCard(algName, alg, note, scramble, tags);
     return algCard;
@@ -211,7 +218,7 @@ function textInterpreter(textLines) {
 
   let tags = []
   let cards = []
-  let algNumber = 0;
+  let algNumber = 1;
   
   let cube = new Cube();
   Cube.initSolver();
