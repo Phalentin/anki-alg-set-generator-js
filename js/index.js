@@ -1,5 +1,4 @@
 import Cube from 'https://cdn.skypack.dev/cubejs';
-import { Alg } from 'https://cdn.cubing.net/js/cubing/alg';
 import { AlgCard } from './AlgCard.js';
 
 let backTemplate = `{{FrontSide}}
