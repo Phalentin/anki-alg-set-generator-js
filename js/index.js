@@ -225,12 +225,13 @@ function textInterpreter(textLines) {
   Cube.initSolver();
 
   for(let line of textLines) {
-    const lineIsTagLine = line.includes('#')
+    const lineIsTagLine = line.includes('#');
     if(lineIsTagLine) {
-      tags = updateTags(line, tags)
+      tags = updateTags(line, tags);
     } else {
-      const algCard = toAlgCard(line, algNumber, tags, cube)
-      cards.push(algCard)
+      const algCard = toAlgCard(line, algNumber, tags, cube);
+      cards.push(algCard);
+      algNumber++;
     }
   } 
   return cards;
