@@ -202,7 +202,7 @@ function textInterpreter(textLines) {
       alg = alg.substring(0, asteriskIndex).trim();
     }
 
-    const cleanAlg = alg.replace(/\(/g, '').replace(/\)/g, '');
+    const cleanAlg = alg.replace(/\(/g, '').replace(/\)/g, '').replace("2'", "2");
     
     let scramble = ""
     try {
