@@ -15,7 +15,7 @@
                 background-color: black;
                 color: white;
             }
-            .link{
+            .subtle-link{
                 color: lightgray;
             }
         }
@@ -27,7 +27,7 @@
             font-family: serif;
             font-size: 1em;
         }
-        .link{
+        .subtle-link{
             text-decoration: none; 
             color: darkgray;
         }
@@ -36,9 +36,10 @@
 <body>
     <h1>Anki Algorithm Set Generator</h1>
     <form id="form">
-        <label for="name-input">Input the name of your alg set:</label><br>
+        <p>* Required field</p>
+        <label for="name-input">Input the name of your alg set: *</label><br>
         <input type="text" name="name-input" id="name-input" placeholder="Input name here" class="input"><br>
-        <label for="alg-input">Input your algorithms here one alg per line:</label><br>
+        <label for="alg-input">Input your algorithms here one alg per line: *</label><br>
         <textarea name="alg-input" id="alg-input" style="width: 30%; height: 50%;" rows="20" placeholder="Syntax:&#10;# Group&#10;Algorithm Name: R U R' U' *Note&#10;## Subgroup&#10;R U2 R' U2" class="input"></textarea><br>
         <label for="pre-rotation">Rotations before applying the scramble:</label><br>
         <input type="text" name="pre-rotation" id="pre-rotation" placeholder="Input rotations here" class="input"><br>
@@ -50,8 +51,8 @@
             <option value="LFU">LFU Sides</option>
         </select><br><br>
         <input type="button" id="generate-button" value="Generate"><br><br>
-        Source Code: <a href="https://github.com/Phalentin/anki-alg-set-generator-js/">https://github.com/Phalentin/anki-alg-set-generator-js/</a><br><br><br><br>
-        Created with ♡ by <a href="https://www.youtube.com/@justenoughalgorithms" class="link">Just Enough Algorithms</a>
+        <p>Source Code: <a href="https://github.com/Phalentin/anki-alg-set-generator-js/">https://github.com/Phalentin/anki-alg-set-generator-js/</a></p><br><br><br><br>
+        <p>Created with ♡ by <a href="https://www.youtube.com/@justenoughalgorithms" class="link">Just Enough Algorithms</a></p>
     </form>
 </body>
 </html>

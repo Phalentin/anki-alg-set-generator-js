@@ -3,7 +3,7 @@ export class AlgCard {
         this.name = name;
         this.alg = alg;
         this.note = note;
-        this.scramble = undefined;
+        this.scramble = scramble;
         this.tags = tags;
     }
 }

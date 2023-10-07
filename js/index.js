@@ -5,12 +5,12 @@ import { AlgCard } from './AlgCard.js';
 let backTemplate = `{{FrontSide}}
 <hr id=answer>
 {{Case Name}}:<br>
-{{Algorithm}}<br>
-Note: {{Note}}
+{{Algorithm}}<br><br>
+{{Note}}
 `;
 
 let rufModel = new Model({
-  name: 'Algorithm',
+  name: 'Algorithm (RUF Image)',
   id: 1695482707862,
   flds: [
     { name: 'Case Name' },
@@ -46,7 +46,7 @@ let rufModel = new Model({
   ],
 });
 let llModel = new Model({
-  name: 'Algorithm',
+  name: 'Algorithm (Last Layer Image)',
   id: 1695482707863,
   flds: [
     { name: 'Case Name' },
@@ -81,7 +81,7 @@ let llModel = new Model({
   ],
 });
 let lfuModel = new Model({
-  name: 'Algorithm',
+  name: 'Algorithm (LFU Image)',
   id: 1695482707864,
   flds: [
     { name: 'Case Name' },
@@ -117,7 +117,7 @@ let lfuModel = new Model({
   ],
 });
 let noneModel = new Model({
-  name: 'Algorithm',
+  name: 'Algorithm (No Image)',
   id: 1695482707865,
   flds: [
     { name: 'Case Name' },
@@ -132,7 +132,7 @@ let noneModel = new Model({
   tmpls: [
     {
       name: 'Card 1',
-      qfmt: 'span style="color:#FF8080">{{Pre-Rotation}} </span>{{Scramble}}',
+      qfmt: '<span style="color:#FF8080">{{Pre-Rotation}} </span>{{Scramble}}',
       afmt: backTemplate,
     }
   ],
@@ -151,16 +151,8 @@ function textInterpreter(textLines) {
    * @returns {string[]} tree of tags, now updated to include the tag from the new line
    */
   function updateTags(line, tags) {
-    /**
-     * Basically which order subgroup the current tag is
-     * @type {int}
-     */
     const tagDepth = (line.match(/#/g)||[]).length - 1;
 
-    /**
-     * Tag name without the hashtag, lowercase and spaces replaced with dashes
-     * @type {string}
-     */
     const rawTag = line.replace(/#/g, '').trim().toLowerCase().replace(/ /g, '-');
 
     tags[tagDepth] = rawTag;
@@ -172,12 +164,14 @@ function textInterpreter(textLines) {
    * Converts a line from the alg input field into an AlgCard object, calculates the scramble and returns the object.
    * @param {string} line Text line from the alg input field, that is confirmed to be a line containing an algorithm
    * @param {int} algNumber Number for naming algorithms with unspecified names (Format: #XX)
+   * @param {Cube} cube cube object, so the solver doesn't have to be initialized for every card
    * @param {string[]} tags Currently valid tags
    */
   function toAlgCard(line, algNumber, tags, cube) {
     /**
      * Returns a scramble to an algorithm
      * @param {string} alg Must be a valid algorithm
+     * @param {Cube} cube cube object, so the solver doesn't have to be initialized for every card
      * @returns {string} Scramble to the entered algorithm
      */
     function calculateScramble(alg, cube) {
@@ -195,20 +189,23 @@ function textInterpreter(textLines) {
     
     const lineIncludesAlgName = line.includes(':');
     const lineIncludesNote = line.includes('*');
+
     if(lineIncludesAlgName) {
-      const colonIndex = line.indexOf(':');
-      algName = line.substring(0, colonIndex).trim();
+      const colonIndex = alg.indexOf(':');
+
+      algName = alg.substring(0, colonIndex).trim();
       alg = alg.substring(colonIndex + 1).trim();
     }
     if(lineIncludesNote) {
-      const asteriskIndex = line.indexOf('*');
-      note = line.substring(asteriskIndex + 1)
+      const asteriskIndex = alg.indexOf('*');
+      
+      note = alg.substring(asteriskIndex + 1)
       alg = alg.substring(0, asteriskIndex).trim();
     }
-
+    
     const scramble = calculateScramble(alg, cube);
 
-    const algCard = new AlgCard(algName, alg, note, tags);
+    const algCard = new AlgCard(algName, alg, note, scramble, tags);
     return algCard;
   }
 
@@ -218,6 +215,7 @@ function textInterpreter(textLines) {
   
   let cube = new Cube();
   Cube.initSolver();
+
   for(let line of textLines) {
     const lineIsTagLine = line.includes('#')
     if(lineIsTagLine) {
@@ -253,13 +251,17 @@ function generatePackage(algs, deckName, imageType, preRotations) {
   ankiPackage.addDeck(deck);
   return ankiPackage;
 }
-function formSubmit() {
-  console.log('Form submitted')
 
+function formSubmit() {
   const name = document.getElementById('name-input').value;
   const textLines = document.getElementById('alg-input').value.split('\n');
   const preRotations = document.getElementById('pre-rotation').value;
   const imageType = document.getElementById('image-type').value;
+
+  if(name == "" || textLines == "") {
+    alert("No alg set name and/or algorithms entered!");
+    return;
+  }
 
   const cards = textInterpreter(textLines);
   
