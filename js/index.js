@@ -1,148 +1,250 @@
-import Cube from 'https://cdn.skypack.dev/cubejs'
-import { Alg } from 'https://cdn.cubing.net/js/cubing/alg'
-import { AlgCard } from './algCard.js'
-
-const modelId = "1695482707863"
-let frontTemplateRuf = `<script src="https://cdn.cubing.net/js/cubing/twisty" type="module"></script>
-
-<twisty-player
-	alg="{{Algorithm}}"
-	experimental-setup-alg="{{Pre-Rotation}}"
-	experimental-setup-anchor="end"
-	visualization="PG3D"
-	hint-facelets="none"
-	background="none"
-	control-panel="none"
-	experimental-drag-input="none"
-	camera-longitude="35"
-	style="margin: auto;"
->
-</twisty-player>
-<span style="color:#FF8080">{{Pre-Rotation}} </span>{{Scramble}}`
-
-let frontTemplateLfu = `<script src="https://cdn.cubing.net/js/cubing/twisty" type="module"></script>
-
-<twisty-player
-	alg="{{Algorithm}}"
-	experimental-setup-alg="{{Pre-Rotation}}"
-	experimental-setup-anchor="end"
-	visualization="PG3D"
-	hint-facelets="none"
-	background="none"
-	control-panel="none"
-	experimental-drag-input="none"
-	camera-longitude="-35"
-	style="margin: auto;"
->
-</twisty-player>
-<span style="color:#FF8080">{{Pre-Rotation}} </span>{{Scramble}}`
-
-let frontTemplateLl = `<script src="https://cdn.cubing.net/js/cubing/twisty" type="module"></script>
-
-<twisty-player
-	alg="{{Algorithm}}"
-	experimental-setup-alg="{{Pre-Rotation}}"
-	experimental-setup-anchor="end"
-	visualization="experimental-2D-LL"
-	hint-facelets="none"
-	background="none"
-	control-panel="none"
-	experimental-drag-input="none"
-	style="margin: auto;"
->
-</twisty-player>
-<span style="color:#FF8080">{{Pre-Rotation}} </span>{{Scramble}}`
-
-let frontTemplateNone = `<span style="color:#FF8080">{{Pre-Rotation}} </span>{{Scramble}}`
+import Cube from 'https://cdn.skypack.dev/cubejs';
+import { Alg } from 'https://cdn.cubing.net/js/cubing/alg';
+import { AlgCard } from './AlgCard.js';
 
 let backTemplate = `{{FrontSide}}
 <hr id=answer>
 {{Case Name}}:<br>
 {{Algorithm}}<br>
 Note: {{Note}}
-`
+`;
 
-function textInterpreter(textLines) {
-  let tags = []
-  let algs = []
-  let algNumber = 0;
-  for(let line of textLines) {
-    if(line.includes("#")) {
-      const rawTag = line.replace(/#/g, '').trim()
-      const tagDepth = (line.match(/#/g)||[]).length - 1;
-      tags[tagDepth] = rawTag;
-      tags.length=tagDepth + 1
-    } else if(line.includes(":")) {
-      const indexColon = line.indexOf(":");
-      let alg = "";
-      let note = "";
-      if(line.includes("*")) {
-        const indexAsterisk = line.indexOf("*")
-        alg = line.substring(indexColon + 1, indexAsterisk).trim();
-        note = line.substring(indexAsterisk + 1).trim();
-      } else {
-        alg = line.substring(indexColon + 1).trim();
-      }
-      const algName = line.substring(0,indexColon);
-      const algObject = new AlgCard(algName, alg, note, [...tags]);
-      algs.push(algObject);
-    } else {
-      algNumber ++;
-      let alg = "";
-      let note = "";
-      if(line.includes("*")) {
-        const indexAsterisk = line.indexOf("*")
-        alg = line.substring(indexAsterisk).trim();
-        note = line.substring(indexAsterisk + 1).trim();
-      } else {
-        alg = line.trim();
-      }
-      const algName = "#" + algNumber;
-      let ankifiedTags = ""
-      for(tag of tags) {
-        cleanTag = tag.replace(/ /g, "_");
-        ankifiedTags += (" " + cleanTag);
-      }
-      const algObject = new AlgCard(algName, alg, note, [...tags]);
-      algs.push(algObject)
+let rufModel = new Model({
+  name: 'Algorithm',
+  id: 1695482707862,
+  flds: [
+    { name: 'Case Name' },
+    { name: 'Algorithm' },
+    { name: 'Note'},
+    { name: 'Scramble'},
+    { name: 'Pre-Rotation'}
+  ],
+  req: [
+    [ 0, 'any', [0, 1, 2, 3, 4] ]
+  ],
+  tmpls: [
+    {
+      name: 'Card 1',
+      qfmt: `<script src="https://cdn.cubing.net/js/cubing/twisty" type="module"></script>
+
+      <twisty-player
+        alg="{{Algorithm}}"
+        experimental-setup-alg="{{Pre-Rotation}}"
+        experimental-setup-anchor="end"
+        visualization="PG3D"
+        hint-facelets="none"
+        background="none"
+        control-panel="none"
+        experimental-drag-input="none"
+        camera-longitude="35"
+        style="margin: auto;"
+      >
+      </twisty-player>
+      <span style="color:#FF8080">{{Pre-Rotation}} </span>{{Scramble}}`,
+      afmt: backTemplate,
     }
+  ],
+});
+let llModel = new Model({
+  name: 'Algorithm',
+  id: 1695482707863,
+  flds: [
+    { name: 'Case Name' },
+    { name: 'Algorithm' },
+    { name: 'Note'},
+    { name: 'Scramble'},
+    { name: 'Pre-Rotation'}
+  ],
+  req: [
+    [ 0, 'any', [0, 1, 2, 3, 4] ]
+  ],
+  tmpls: [
+    {
+      name: 'Card 1',
+      qfmt: `<script src="https://cdn.cubing.net/js/cubing/twisty" type="module"></script>
+
+      <twisty-player
+        alg="{{Algorithm}}"
+        experimental-setup-alg="{{Pre-Rotation}}"
+        experimental-setup-anchor="end"
+        visualization="experimental-2D-LL"
+        hint-facelets="none"
+        background="none"
+        control-panel="none"
+        experimental-drag-input="none"
+        style="margin: auto;"
+      >
+      </twisty-player>
+      <span style="color:#FF8080">{{Pre-Rotation}} </span>{{Scramble}}`,
+      afmt: backTemplate,
+    }
+  ],
+});
+let lfuModel = new Model({
+  name: 'Algorithm',
+  id: 1695482707864,
+  flds: [
+    { name: 'Case Name' },
+    { name: 'Algorithm' },
+    { name: 'Note'},
+    { name: 'Scramble'},
+    { name: 'Pre-Rotation'}
+  ],
+  req: [
+    [ 0, 'any', [0, 1, 2, 3, 4] ]
+  ],
+  tmpls: [
+    {
+      name: 'Card 1',
+      qfmt: `<script src="https://cdn.cubing.net/js/cubing/twisty" type="module"></script>
+
+      <twisty-player
+        alg="{{Algorithm}}"
+        experimental-setup-alg="{{Pre-Rotation}}"
+        experimental-setup-anchor="end"
+        visualization="PG3D"
+        hint-facelets="none"
+        background="none"
+        control-panel="none"
+        experimental-drag-input="none"
+        camera-longitude="-35"
+        style="margin: auto;"
+      >
+      </twisty-player>
+      <span style="color:#FF8080">{{Pre-Rotation}} </span>{{Scramble}}`,
+      afmt: backTemplate,
+    }
+  ],
+});
+let noneModel = new Model({
+  name: 'Algorithm',
+  id: 1695482707865,
+  flds: [
+    { name: 'Case Name' },
+    { name: 'Algorithm' },
+    { name: 'Note'},
+    { name: 'Scramble'},
+    { name: 'Pre-Rotation'}
+  ],
+  req: [
+    [ 0, 'any', [0, 1, 2, 3, 4] ]
+  ],
+  tmpls: [
+    {
+      name: 'Card 1',
+      qfmt: 'span style="color:#FF8080">{{Pre-Rotation}} </span>{{Scramble}}',
+      afmt: backTemplate,
+    }
+  ],
+});
+
+/**
+ * Converts the input from the alg field into an array of AlgCard objects for further processing
+ * @param {string[]} textLines Array of strings from the alg input field
+ * @returns {AlgCard[]} Array of AlgCard objects
+ */
+function textInterpreter(textLines) {
+  /**
+   * Updates the currently valid tags
+   * @param {string} line - unmodified line of the input field, must be a line that contains a tag
+   * @param {string[]} tags - tree of tags
+   * @returns {string[]} tree of tags, now updated to include the tag from the new line
+   */
+  function updateTags(line, tags) {
+    /**
+     * Basically which order subgroup the current tag is
+     * @type {int}
+     */
+    const tagDepth = (line.match(/#/g)||[]).length - 1;
+
+    /**
+     * Tag name without the hashtag, lowercase and spaces replaced with dashes
+     * @type {string}
+     */
+    const rawTag = line.replace(/#/g, '').trim().toLowerCase().replace(/ /g, '-');
+
+    tags[tagDepth] = rawTag;
+    tags.length=tagDepth + 1;
+    return tags;
   }
 
-  return algs;
-}
+  /**
+   * Converts a line from the alg input field into an AlgCard object, calculates the scramble and returns the object.
+   * @param {string} line Text line from the alg input field, that is confirmed to be a line containing an algorithm
+   * @param {int} algNumber Number for naming algorithms with unspecified names (Format: #XX)
+   * @param {string[]} tags Currently valid tags
+   */
+  function toAlgCard(line, algNumber, tags, cube) {
+    /**
+     * Returns a scramble to an algorithm
+     * @param {string} alg Must be a valid algorithm
+     * @returns {string} Scramble to the entered algorithm
+     */
+    function calculateScramble(alg, cube) {
+      cube.identity()
 
-function calculateScrambles(algs) {
-  Cube.initSolver()
+      cube.move(alg);
+      const scramble = cube.solve();
 
-  const cube = new Cube();
-  for(let alg of algs){
-    cube.identity();
+      return scramble;
+    }
+
+    let algName = '#' + algNumber;
+    let note = "";
+    let alg = line;
     
-    const algNormalized = (new Alg(alg.alg)).expand().toString();
+    const lineIncludesAlgName = line.includes(':');
+    const lineIncludesNote = line.includes('*');
+    if(lineIncludesAlgName) {
+      const colonIndex = line.indexOf(':');
+      algName = line.substring(0, colonIndex).trim();
+      alg = alg.substring(colonIndex + 1).trim();
+    }
+    if(lineIncludesNote) {
+      const asteriskIndex = line.indexOf('*');
+      note = line.substring(asteriskIndex + 1)
+      alg = alg.substring(0, asteriskIndex).trim();
+    }
 
-    cube.move(algNormalized);
-    const result = cube.solve();
-    alg.scramble = result;
+    const scramble = calculateScramble(alg, cube);
+
+    const algCard = new AlgCard(algName, alg, note, tags);
+    return algCard;
   }
-  return algs;
+
+  let tags = []
+  let cards = []
+  let algNumber = 0;
+  
+  let cube = new Cube();
+  Cube.initSolver();
+  for(let line of textLines) {
+    const lineIsTagLine = line.includes('#')
+    if(lineIsTagLine) {
+      tags = updateTags(line, tags)
+    } else {
+      const algCard = toAlgCard(line, algNumber, tags, cube)
+      cards.push(algCard)
+    }
+  } 
+  return cards;
 }
 
 function generatePackage(algs, deckName, imageType, preRotations) {
   let deck = new Deck(+new Date, deckName);
-  console.log(imageType);
-  if(imageType == "none") {
+  if(imageType == 'none') {
     for(let alg of algs) {
       deck.addNote(noneModel.note([alg.name, alg.alg, alg.note, alg.scramble, preRotations], alg.tags));
     }
-  } else if(imageType == "u") {
+  } else if(imageType == 'LL') {
     for(let alg of algs) {
       deck.addNote(llModel.note([alg.name, alg.alg, alg.note, alg.scramble, preRotations], alg.tags));
     }
-  } else if(imageType == "RUF") {
+  } else if(imageType == 'RUF') {
     for(let alg of algs) {
       deck.addNote(rufModel.note([alg.name, alg.alg, alg.note, alg.scramble, preRotations], alg.tags));
     }
-  } else if(imageType == "LFU") {
+  } else if(imageType == 'LFU') {
     for(let alg of algs) {
       deck.addNote(lfuModel.note([alg.name, alg.alg, alg.note, alg.scramble, preRotations], alg.tags));
     }
@@ -155,17 +257,15 @@ function formSubmit() {
   console.log('Form submitted')
 
   const name = document.getElementById('name-input').value;
-  const textLines = document.getElementById('alg-input').value.split("\n");
+  const textLines = document.getElementById('alg-input').value.split('\n');
   const preRotations = document.getElementById('pre-rotation').value;
   const imageType = document.getElementById('image-type').value;
 
-  const algs = textInterpreter(textLines);
-
-  const algCards = calculateScrambles(algs);
+  const cards = textInterpreter(textLines);
   
-  const ankiPackage = generatePackage(algCards, name, imageType, preRotations);
+  const ankiPackage = generatePackage(cards, name, imageType, preRotations);
 
-  const fileName = name.replace(/ /g, "_").toLowerCase() + ".apkg";
+  const fileName = name.replace(/ /g, '_').toLowerCase() + '.apkg';
 
   ankiPackage.writeToFile(fileName);
 }
@@ -180,96 +280,4 @@ window.initSqlJs(config).then(function (sql) {
     window.SQL = sql;
 });
 
-let rufModel = new Model({
-  name: "Algorithm",
-  id: modelId,
-  flds: [
-    { name: "Case Name" },
-    { name: "Algorithm" },
-    { name: "Note"},
-    { name: "Scramble"},
-    { name: "Pre-Rotation"}
-  ],
-  req: [
-    [ 0, "any", [0, 1, 2, 3, 4] ]
-  ],
-  tmpls: [
-    {
-      name: "Card 1",
-      qfmt: frontTemplateRuf,
-      afmt: backTemplate,
-    }
-  ],
-})
-let lfuModel = new Model({
-  name: "Algorithm",
-  id: modelId,
-  flds: [
-    { name: "Case Name" },
-    { name: "Algorithm" },
-    { name: "Note"},
-    { name: "Scramble"},
-    { name: "Pre-Rotation"}
-  ],
-  req: [
-    [ 0, "any", [0, 1, 2, 3, 4] ]
-  ],
-  tmpls: [
-    {
-      name: "Card 1",
-      qfmt: frontTemplateLfu,
-      afmt: backTemplate,
-    }
-  ],
-})
-let llModel = new Model({
-  name: "Algorithm",
-  id: modelId,
-  flds: [
-    { name: "Case Name" },
-    { name: "Algorithm" },
-    { name: "Note"},
-    { name: "Scramble"},
-    { name: "Pre-Rotation"}
-  ],
-  req: [
-    [ 0, "any", [0, 1, 2, 3, 4] ]
-  ],
-  tmpls: [
-    {
-      name: "Card 1",
-      qfmt: frontTemplateLl,
-      afmt: backTemplate,
-    }
-  ],
-})
-let noneModel = new Model({
-  name: "Algorithm",
-  id: modelId,
-  flds: [
-    { name: "Case Name" },
-    { name: "Algorithm" },
-    { name: "Note"},
-    { name: "Scramble"},
-    { name: "Pre-Rotation"}
-  ],
-  req: [
-    [ 0, "any", [0, 1, 2, 3, 4] ]
-  ],
-  tmpls: [
-    {
-      name: "Card 1",
-      qfmt: frontTemplateNone,
-      afmt: backTemplate,
-    }
-  ],
-})
-
-document.getElementById("generate-button").addEventListener('click', formSubmit);
-
-//let deck = new Deck(+new Date, "Test Deck")
-//
-//deck.addNote(model.note(['Ub-Perm',"M2 U' M U2 M' U' M2", "L' F D' L2 F2 R2 D2 R2 U R2 U' B2 U' R2 F2 U' F' L U' L U' L' U", "x2"]))
-//
-//let ankiPackage = new Package()
-//ankiPackage.addDeck(deck)
+document.getElementById('generate-button').addEventListener('click', formSubmit);
